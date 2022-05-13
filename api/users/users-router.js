@@ -78,9 +78,19 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
 
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId,  (req, res) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+  const userid = req.params.id
+  const name = req.body.name
+  dbUsers.remove(userid)
+    .then(deletedUser => res.status(200).json(req.user) )
+    .catch(() => res.status(500).json({message:'There was an error while updating the user to the database'}))
+});
+
+router.delete('/', (req, res) => {
+  // action restricted
+    res.status(200).json({message:'action restricted'})
 });
 
 router.get('/:id/posts', (req, res) => {

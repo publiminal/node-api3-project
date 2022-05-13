@@ -33,9 +33,10 @@ function validateUserId(req, res, next) {
   // DO YOUR MAGIC
   dbUsers.getById(req.params.id)
   .then(user => {
-    const isValid = user != null 
+    const isValid = user != null && user 
     if(isValid){
       req.user = user
+      next()
     }else{
       console.log('user not valid')
       res.status(404).json({ message: "user not found" })
@@ -44,7 +45,6 @@ function validateUserId(req, res, next) {
   })
   .catch(err => console.warn('ValidateUser error ::', err ))
 
-  next()
   // console.log('isValidUser', isValidUser)
 }
 
