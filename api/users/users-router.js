@@ -93,9 +93,17 @@ router.delete('/', (req, res) => {
     res.status(200).json({message:'action restricted'})
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUserId,  (req, res) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
+  dbPosts.getById(req.params.id)
+  .then(posts => {
+        // console.log('req.post', req.post)
+        res.status(200).json(posts)
+      })
+      .catch(() => {
+        res.status(500).json({message:'The post(s) information could not be retrieved'})
+      })
 });
 
 router.post('/:id/posts', (req, res) => {
