@@ -96,7 +96,7 @@ router.delete('/', (req, res) => {
 router.get('/:id/posts', validateUserId,  (req, res) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
-  dbPosts.getById(req.params.id)
+  dbUsers.getUserPosts(req.params.id)
   .then(posts => {
         // console.log('req.post', req.post)
         res.status(200).json(posts)
