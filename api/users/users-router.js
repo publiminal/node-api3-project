@@ -1,7 +1,7 @@
 const express = require('express');
 const dbUsers = require('../users/users-model')
 const dbPosts = require('../posts/posts-model')
-const { validateUserId, validateUser } = require('../middleware/middleware')
+const { validateUserId, validateUser, validatePost } = require('../middleware/middleware')
 
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
@@ -106,10 +106,21 @@ router.get('/:id/posts', validateUserId,  (req, res) => {
       })
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validatePost, validateUserId, (req, res) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  const id = req.params.id
+  const newPost = {user_id:id, ...req.body}
+  dbPosts.insert(newPost)
+  .then(post => { 
+    console.log(' new post', post)
+    res.status(200).json(post)
+   })
+  .catch((err) => { 
+    console.log('new post err', err)
+    res.status(500).json({message:'The post(s) information could not be retrieved'})
+   })
 });
 
 // do not forget to export the router
